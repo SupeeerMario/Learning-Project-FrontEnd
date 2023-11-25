@@ -16,23 +16,22 @@ function App() {
     setMessage(event.target.value);
   };
 
-
   useEffect(() => {
-    const formattedMessage = message.toLocaleLowerCase().replace(/\s+/g, '');
+    const formattedMessage = message.toLowerCase().replace(/\s+/g, '');
     setMessage(formattedMessage);
   }, [message]);
 
-
-  
   const handleClick = async () => {
     console.log('Input Value:', message);
     const desiredWord = 'khaled';
+    let randomImage;
+
     if (message.includes(desiredWord)) {
       try {
-        const response = await fetch('http://localhost:5000/api/khaled/submit', {
+        const response = await fetch('http://localhost:5000/api/post', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json', // Fix typo here
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ username: message }),
         });
@@ -40,11 +39,19 @@ function App() {
         if (response.ok) {
           console.log('User Created Successfully');
           const randomIndex = Math.floor(Math.random() * imagelst.length);
-          const randomImage = imagelst[randomIndex];
+          randomImage = imagelst[randomIndex];
           setDisplayedImage(randomImage);
         } else {
           console.log('Error occurred while creating user ' + response.status);
         }
+      } catch (error) {
+        console.error('Error', error);
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('images', randomImage);
+        
       } catch (error) {
         console.error('Error', error);
       }
